@@ -1,0 +1,10 @@
+@import-normalize;
+@import 'styles.css';
+
+
+:root{
+}
+
+* {
+  box-sizing: border-box;
+}
