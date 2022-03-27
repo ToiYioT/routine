@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "@emotion/styled": "^11.8.1",
+    "@js-temporal/polyfill": "^0.4.0",
     "@mantine/core": "^4.0.8",
     "@mantine/hooks": "^4.0.8",
     "@mui/icons-material": "^5.5.1",

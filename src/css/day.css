@@ -1,0 +1,12 @@
+
+.part-of-day-container{
+    margin: 1rem 0rem;
+}
+
+.part-of-day-header{
+    display: flex;
+    justify-content: space-between;
+    text-transform: uppercase;
+    margin: 2rem 0 1rem 0;
+    font-weight: bold;
+}

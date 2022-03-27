@@ -1,10 +1,44 @@
 @import-normalize;
-@import 'styles.css';
+@import 'day.css';
+@import 'task.css';
+@import 'footer.css';
 
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap');
 
 :root{
+
+  font-family: 'Oswald', sans-serif;
+  background-color: var(--background-color);
+
+  --border-color:rgb(204, 204, 204);
+  --background-color: rgb(238, 238, 238);
+}
+
+html, body{
+  margin: 0;
 }
 
 * {
   box-sizing: border-box;
+}
+
+.app-container{
+  padding: 1rem;
+}
+
+.time-and-date-container{
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.header-container{
+  font-family: 'Playfair Display', serif;
+  font-size: 4rem;
+  text-align: center;
+  text-transform: uppercase;
+
+  padding-top: 2rem;
 }
