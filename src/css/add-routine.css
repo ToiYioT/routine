@@ -1,0 +1,10 @@
+
+.routine-view-items{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.add-routine-submit-btn{
+    margin-top: 2rem;
+}

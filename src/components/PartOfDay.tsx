@@ -1,14 +1,17 @@
 
 import React from 'react'
+import useRoutineData, { Routine } from '../contexts/RoutineDataContext'
 import TaskCard from './TaskCard'
 
 type Props = {
     partOfDay: string
-    tasks: string[]
     endTime: string
 }
 
-export default function PartOfDay({ partOfDay, tasks, endTime }: Props) {
+export default function PartOfDay({ partOfDay, endTime }: Props) {
+
+    const { data } = useRoutineData();
+
     return (
         <div className="part-of-day-container">
             <div className="part-of-day-header">
@@ -20,13 +23,18 @@ export default function PartOfDay({ partOfDay, tasks, endTime }: Props) {
                 </div>
             </div>
 
-
             <div className="task-cards-container">
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
+                {
+                    data.map(task => {
+
+                        if (task.defaultTimeOfDay.includes(partOfDay)) {
+                            return <TaskCard
+                                taskName={task.name}
+                                key={task.id}
+                            />
+                        }
+                    })
+                }
             </div>
 
         </div>

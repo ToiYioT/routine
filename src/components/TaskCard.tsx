@@ -2,7 +2,9 @@
 import React, { createRef, useEffect, useRef, useState } from 'react'
 import LaundryIcon from '@mui/icons-material/LocalLaundryService';
 
-type Props = {}
+type Props = {
+    taskName: string
+}
 
 const colors = [
     "rgb(164, 219, 179)",
@@ -13,7 +15,7 @@ const colors = [
     "rgb(194, 219, 164)",
 ]
 
-export default function TaskCard({ }: Props) {
+export default function TaskCard({ taskName }: Props) {
 
     const [cardOn, setCardOn] = useState(Math.random() > .5);
     const bgColorRef = useRef(colors[Math.floor(Math.random() * colors.length)]);
@@ -36,7 +38,7 @@ export default function TaskCard({ }: Props) {
                 />
             </div>
             <div className="task-card-description">
-                Do the Laundry
+                {taskName}
             </div>
         </div>
     )
