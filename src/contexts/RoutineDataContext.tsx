@@ -7,15 +7,13 @@ export type RoutineContext = {
     setData?: (data: Routine[]) => void,
 
     addRoutine: (routine: Routine) => void,
+    updateRoutine: (routine: Routine) => void,
     deleteRoutine?: (id: string) => void,
     getNewRoutine: () => Routine,
+    getRoutine: (id: string) => Routine | null
 }
 
-const RoutineContext = createContext<RoutineContext>({
-    data: [],
-    getNewRoutine: () => getNewRoutine(),
-    addRoutine: () => null,
-});
+const RoutineContext = createContext<RoutineContext | null>(null);
 
 interface Props {
     children: ReactNode,
@@ -36,10 +34,23 @@ export function RoutineProvider({ children }: Props) {
         });
     }
 
+    function updateRoutine(routineToUpdate: Routine) {
+        setData((prevData: Routine[]) => {
+            return prevData.map(routine => {
+                if (routine.id === routineToUpdate.id) return routineToUpdate;
+                return routine
+            })
+        });
+    }
+
     function deleteRoutine(id: string) {
         setData((prevData: Routine[]) => {
             return prevData.filter(inquiry => inquiry.id !== id);
         });
+    }
+
+    function getRoutine(id: string) {
+        return data.find((task: Routine) => task.id == id);
     }
 
 
@@ -50,8 +61,10 @@ export function RoutineProvider({ children }: Props) {
                 setData,
 
                 addRoutine,
+                updateRoutine,
                 deleteRoutine,
                 getNewRoutine,
+                getRoutine,
             }}
         >
             {children}
@@ -78,11 +91,6 @@ function getNewRoutine() {
         stickyTask: false,
         dismissed: false,
     };
-
-    console.log("got to here, routine: ");
-    console.log(newRoutine);
-
-
 
     return newRoutine;
 }

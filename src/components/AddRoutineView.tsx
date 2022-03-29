@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 
 import {
     TextInput, MultiSelect,
@@ -7,7 +7,8 @@ import {
 import { DatePicker } from '@mantine/dates';
 
 import { Calendar } from 'tabler-icons-react';
-import useRoutineData from '../contexts/RoutineDataContext';
+import useRoutineData, { RoutineContext } from '../contexts/RoutineDataContext';
+import { AppContext } from '../App';
 
 
 type Props = {
@@ -22,29 +23,29 @@ const sectionOfDayData = [
 
 export default function AddRoutineView({ closeModal }: Props) {
 
-    const { addRoutine, getNewRoutine } = useRoutineData();
-    const nameInputRef = useRef<HTMLInputElement>(null);
+    const { addRoutine, updateRoutine,
+        getRoutine, getNewRoutine } = useRoutineData() as RoutineContext;
+    const { selectedTaskId, setSelectedTaskId } = useContext(AppContext) as AppContext;
+    const selectedRoutine = selectedTaskId ? getRoutine(selectedTaskId) : null;
 
-    const [multiInputValue, setMultiInputValue] = useState<string[]>(["morning"]);
+    const nameInputRef = useRef<HTMLInputElement>(null);
+    const [multiInputValue, setMultiInputValue] = useState<string[]>(
+        selectedRoutine ? selectedRoutine.defaultTimeOfDay : ["morning"]
+    );
+
 
 
     function handleSubmit() {
 
-        const newRoutine = getNewRoutine();
-        console.log("multi input value: " + multiInputValue);
-        console.log(multiInputValue);
-
-
-
+        const newRoutine = selectedRoutine ? selectedRoutine : getNewRoutine();
         newRoutine.name = nameInputRef.current?.value || "no name";
 
         if (multiInputValue.length > 0) {
-            console.log("changed the time of day value");
-
             newRoutine.defaultTimeOfDay = multiInputValue;
         }
 
-        addRoutine(newRoutine);
+        selectedRoutine ? updateRoutine(newRoutine) : addRoutine(newRoutine);
+        setSelectedTaskId(null);
         closeModal();
     }
 
@@ -55,6 +56,7 @@ export default function AddRoutineView({ closeModal }: Props) {
             <TextInput
                 placeholder="task"
                 label="Task Name"
+                defaultValue={selectedRoutine ? selectedRoutine.name : ""}
                 ref={nameInputRef}
             />
 

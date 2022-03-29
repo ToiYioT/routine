@@ -1,24 +1,23 @@
-import React, { useState } from 'react'
-import { ActionIcon } from '@mantine/core';
+import React, { useContext, useState } from 'react'
+import { AppContext } from '../App';
 
+import { ActionIcon } from '@mantine/core';
 import AddCircleIcon from '@mui/icons-material/AddCircleOutline';
 import GridViewIcon from '@mui/icons-material/GridView';
 import SettingsIcon from '@mui/icons-material/Settings';
 
-import { Modal } from '@mantine/core';
-import AddRoutineView from './AddRoutineView';
 
 type Props = {}
 
 export default function Footer() {
 
-    const [modalOpen, setModalOpen] = useState(false);
+    const { setAddTaskModalOpen } = useContext(AppContext) as AppContext;
 
     return (
         <>
             <div className="footer-container">
                 <ActionIcon
-                    onClick={() => setModalOpen(true)}
+                    onClick={() => setAddTaskModalOpen(true)}
                 >
                     <AddCircleIcon />
                 </ActionIcon>
@@ -33,17 +32,6 @@ export default function Footer() {
                     <SettingsIcon />
                 </ActionIcon>
             </div>
-
-            <Modal
-                opened={modalOpen}
-                onClose={() => setModalOpen(false)}
-                title="Add new routine"
-            >
-                <AddRoutineView
-                    closeModal={() => setModalOpen(false)}
-                />
-            </Modal>
         </>
-
     )
 }

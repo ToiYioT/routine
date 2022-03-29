@@ -1,6 +1,6 @@
 
 import React from 'react'
-import useRoutineData, { Routine } from '../contexts/RoutineDataContext'
+import useRoutineData, { Routine, RoutineContext } from '../contexts/RoutineDataContext'
 import TaskCard from './TaskCard'
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 
 export default function PartOfDay({ partOfDay, endTime }: Props) {
 
-    const { data } = useRoutineData();
+    const { data } = useRoutineData() as RoutineContext;
 
     return (
         <div className="part-of-day-container">
@@ -29,7 +29,7 @@ export default function PartOfDay({ partOfDay, endTime }: Props) {
 
                         if (task.defaultTimeOfDay.includes(partOfDay)) {
                             return <TaskCard
-                                taskName={task.name}
+                                task={task}
                                 key={task.id}
                             />
                         }

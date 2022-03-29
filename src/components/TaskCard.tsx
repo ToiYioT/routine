@@ -1,9 +1,12 @@
 
-import React, { createRef, useEffect, useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import LaundryIcon from '@mui/icons-material/LocalLaundryService';
+import useLongPress from '../hooks/useLongPress';
+import { AppContext } from '../App';
+import { Routine } from '../contexts/RoutineDataContext';
 
 type Props = {
-    taskName: string
+    task: Routine
 }
 
 const colors = [
@@ -15,10 +18,25 @@ const colors = [
     "rgb(194, 219, 164)",
 ]
 
-export default function TaskCard({ taskName }: Props) {
+export default function TaskCard({ task }: Props) {
 
     const [cardOn, setCardOn] = useState(Math.random() > .5);
     const bgColorRef = useRef(colors[Math.floor(Math.random() * colors.length)]);
+
+    const {
+        setAddTaskModalOpen,
+        setSelectedTaskId } = useContext(AppContext) as AppContext;
+
+    const onLongPress = () => {
+        setSelectedTaskId(task.id);
+        setAddTaskModalOpen(true);
+    };
+
+    const onClick = () => {
+        setCardOn(prevState => !prevState)
+    }
+
+    const longPressEvent = useLongPress(onLongPress, onClick);
 
     const cardClasses = "task-card-container" + (
         cardOn ? "" : " faded-card"
@@ -27,7 +45,7 @@ export default function TaskCard({ taskName }: Props) {
     return (
         <div
             className={cardClasses}
-            onClick={() => setCardOn(prevState => !prevState)}
+            {...longPressEvent}
         >
             <div
                 className="task-card-image-section"
@@ -38,7 +56,7 @@ export default function TaskCard({ taskName }: Props) {
                 />
             </div>
             <div className="task-card-description">
-                {taskName}
+                {task.name}
             </div>
         </div>
     )
