@@ -1,4 +1,5 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import { Modal } from '@mantine/core';
 
 import {
     TextInput, MultiSelect,
@@ -12,7 +13,8 @@ import { AppContext } from '../App';
 
 
 type Props = {
-    closeModal: () => void
+    addroutineModalOpen: boolean
+    setAddroutineModalOpen: (open: boolean) => void
 }
 
 const sectionOfDayData = [
@@ -21,19 +23,27 @@ const sectionOfDayData = [
     { value: 'evening', label: 'Evening' },
 ];
 
-export default function AddRoutineView({ closeModal }: Props) {
+export default function AddRoutineView(props: Props) {
+
+    const {
+        addroutineModalOpen,
+        setAddroutineModalOpen,
+    } = props;
 
     const { addRoutine, updateRoutine,
         getRoutine, getNewRoutine } = useRoutineData() as RoutineContext;
     const { selectedTaskId, setSelectedTaskId } = useContext(AppContext) as AppContext;
     const selectedRoutine = selectedTaskId ? getRoutine(selectedTaskId) : null;
-
     const nameInputRef = useRef<HTMLInputElement>(null);
-    const [multiInputValue, setMultiInputValue] = useState<string[]>(
-        selectedRoutine ? selectedRoutine.defaultTimeOfDay : ["morning"]
-    );
 
+    const [multiInputValue, setMultiInputValue] = useState<string[]>(["morning"]);
 
+    useEffect(() => {
+        const newMultyValue = selectedRoutine ? selectedRoutine.defaultTimeOfDay
+            : ["morning"];
+        setMultiInputValue(newMultyValue);
+
+    }, [selectedRoutine]);
 
     function handleSubmit() {
 
@@ -44,53 +54,78 @@ export default function AddRoutineView({ closeModal }: Props) {
             newRoutine.defaultTimeOfDay = multiInputValue;
         }
 
-        selectedRoutine ? updateRoutine(newRoutine) : addRoutine(newRoutine);
+        selectedRoutine ? updateRoutine(newRoutine)
+            : addRoutine(newRoutine);
+
         setSelectedTaskId(null);
-        closeModal();
+        handleCloseModal();
     }
 
+    function handleCloseModal() {
+        setAddroutineModalOpen(false);
+        setSelectedTaskId(null);
+    }
 
     return (
-        <div className="routine-view-items">
+        <Modal
+            opened={addroutineModalOpen}
+            onClose={handleCloseModal}
+            title={selectedRoutine ? "Update " + selectedRoutine.name
+                : "Add new routine"}
+        >
 
-            <TextInput
-                placeholder="task"
-                label="Task Name"
-                defaultValue={selectedRoutine ? selectedRoutine.name : ""}
-                ref={nameInputRef}
-            />
+            <div className="routine-view-items">
 
-            <DatePicker
-                label="Starting Date"
-                placeholder="Pick date"
-                firstDayOfWeek="sunday"
-                defaultValue={new Date()}
-                icon={<Calendar size={16} />}
-            />
+                <TextInput
+                    placeholder="task"
+                    label="Task Name"
+                    defaultValue={selectedRoutine ? selectedRoutine.name : ""}
+                    ref={nameInputRef}
+                />
 
-            <NumberInput
-                label="Repeat task every x days"
-                defaultValue={7}
-            />
+                <DatePicker
+                    label="Starting Date"
+                    placeholder="Pick date"
+                    firstDayOfWeek="sunday"
+                    defaultValue={new Date()}
+                    icon={<Calendar size={16} />}
+                />
 
-            <MultiSelect
-                data={sectionOfDayData}
-                label="Time of day"
-                value={multiInputValue}
-                onChange={setMultiInputValue}
-            />
+                <NumberInput
+                    label="Repeat task every x days"
+                    defaultValue={7}
+                />
 
-            <Checkbox
-                label="Should carry over when ignored"
-                color="lime"
-            />
+                <MultiSelect
+                    data={sectionOfDayData}
+                    label="Time of day"
+                    value={multiInputValue}
+                    onChange={setMultiInputValue}
+                />
 
-            <Button
-                className='add-routine-submit-btn'
-                onClick={handleSubmit}
-                color="lime">
-                Submit
-            </Button>
-        </div>
+                <Checkbox
+                    label="Should carry over when ignored"
+                    color="lime"
+                />
+
+
+                <Button
+                    className='add-routine-submit-btn'
+                    onClick={handleSubmit}
+                    color="lime">
+                    {selectedRoutine ? "Update" : "Submit"}
+                </Button>
+
+                {// optional delete button
+                    selectedRoutine &&
+                    <Button
+                        className='add-routine-delete-btn'
+                        color="red">
+                        Delete (long press)
+                    </Button>}
+            </div>
+
+        </Modal>
+
     )
 }

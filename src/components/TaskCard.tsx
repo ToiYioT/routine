@@ -24,12 +24,12 @@ export default function TaskCard({ task }: Props) {
     const bgColorRef = useRef(colors[Math.floor(Math.random() * colors.length)]);
 
     const {
-        setAddTaskModalOpen,
+        setAddroutineModalOpen,
         setSelectedTaskId } = useContext(AppContext) as AppContext;
 
     const onLongPress = () => {
         setSelectedTaskId(task.id);
-        setAddTaskModalOpen(true);
+        setAddroutineModalOpen(true);
     };
 
     const onClick = () => {

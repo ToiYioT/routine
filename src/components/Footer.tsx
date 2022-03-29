@@ -11,13 +11,13 @@ type Props = {}
 
 export default function Footer() {
 
-    const { setAddTaskModalOpen } = useContext(AppContext) as AppContext;
+    const { setAddroutineModalOpen } = useContext(AppContext) as AppContext;
 
     return (
         <>
             <div className="footer-container">
                 <ActionIcon
-                    onClick={() => setAddTaskModalOpen(true)}
+                    onClick={() => setAddroutineModalOpen(true)}
                 >
                     <AddCircleIcon />
                 </ActionIcon>
