@@ -37,12 +37,25 @@ export default function AddRoutineView(props: Props) {
     const nameInputRef = useRef<HTMLInputElement>(null);
 
     const [multiInputValue, setMultiInputValue] = useState<string[]>(["morning"]);
+    const [frequencyValue, setFrequencyValue] = useState<number>(7);
+    const [isStickyTask, setIsStickyTask] = useState<boolean>(false);
+    const [startingDate, setStartingDate] = useState<Date>(new Date());
 
     useEffect(() => {
-        const newMultyValue = selectedRoutine ? selectedRoutine.defaultTimeOfDay
-            : ["morning"];
-        setMultiInputValue(newMultyValue);
+        if (selectedRoutine) {
+            // set the values from data
+            setMultiInputValue(selectedRoutine.defaultTimeOfDay);
+            setFrequencyValue(selectedRoutine.frequency);
+            setIsStickyTask(selectedRoutine.stickyTask);
+            setStartingDate(new Date(selectedRoutine.startingDate));
 
+        } else {
+            // defaults:
+            setMultiInputValue(["morning"]);
+            setFrequencyValue(7);
+            setIsStickyTask(false);
+            setStartingDate(new Date());
+        }
     }, [selectedRoutine]);
 
     function handleSubmit() {
@@ -53,6 +66,13 @@ export default function AddRoutineView(props: Props) {
         if (multiInputValue.length > 0) {
             newRoutine.defaultTimeOfDay = multiInputValue;
         }
+        newRoutine.frequency = frequencyValue;
+        newRoutine.stickyTask = isStickyTask;
+        newRoutine.startingDate = startingDate;
+        console.log("saving the date:");
+        console.log(startingDate);
+
+
 
         selectedRoutine ? updateRoutine(newRoutine)
             : addRoutine(newRoutine);
@@ -87,13 +107,22 @@ export default function AddRoutineView(props: Props) {
                     label="Starting Date"
                     placeholder="Pick date"
                     firstDayOfWeek="sunday"
-                    defaultValue={new Date()}
+
+                    defaultValue={startingDate}
+                    value={startingDate}
+                    onChange={(e: Date) => {
+                        console.log("on change date:");
+                        console.log(e);
+
+                        setStartingDate(e)
+                    }}
                     icon={<Calendar size={16} />}
                 />
 
                 <NumberInput
                     label="Repeat task every x days"
-                    defaultValue={7}
+                    value={frequencyValue}
+                    onChange={(value: number) => setFrequencyValue(value)}
                 />
 
                 <MultiSelect
@@ -106,6 +135,8 @@ export default function AddRoutineView(props: Props) {
                 <Checkbox
                     label="Should carry over when ignored"
                     color="lime"
+                    checked={isStickyTask}
+                    onChange={(event) => setIsStickyTask(event.currentTarget.checked)}
                 />
 
 

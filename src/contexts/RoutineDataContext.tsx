@@ -84,8 +84,8 @@ function getNewRoutine() {
         name: "",
         icon: 0,
 
-        startingDate: "",
-        frequency: "",
+        startingDate: new Date(),
+        frequency: 7,
         defaultTimeOfDay: ["morning"],
         nextTime: "",
         stickyTask: false,
@@ -101,11 +101,11 @@ export type Routine = {
     name: string,
     icon: number
 
-    startingDate?: string
-    frequency?: string
+    startingDate: Date
+    frequency: number
     defaultTimeOfDay: string[]
     nextTime?: string
-    stickyTask?: boolean
+    stickyTask: boolean
     dismissed?: boolean
 
     taksInstances?: TaksInstance[]
