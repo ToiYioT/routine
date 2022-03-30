@@ -11,6 +11,8 @@ import { Calendar } from 'tabler-icons-react';
 import useRoutineData, { RoutineContext } from '../contexts/RoutineDataContext';
 import { AppContext } from '../App';
 
+import useLongPress from '../hooks/useLongPress';
+
 
 type Props = {
     addroutineModalOpen: boolean
@@ -31,7 +33,7 @@ export default function AddRoutineView(props: Props) {
     } = props;
 
     const { addRoutine, updateRoutine,
-        getRoutine, getNewRoutine } = useRoutineData() as RoutineContext;
+        getRoutine, getNewRoutine, deleteRoutine } = useRoutineData() as RoutineContext;
     const { selectedTaskId, setSelectedTaskId } = useContext(AppContext) as AppContext;
     const selectedRoutine = selectedTaskId ? getRoutine(selectedTaskId) : null;
     const nameInputRef = useRef<HTMLInputElement>(null);
@@ -40,6 +42,16 @@ export default function AddRoutineView(props: Props) {
     const [frequencyValue, setFrequencyValue] = useState<number>(7);
     const [isStickyTask, setIsStickyTask] = useState<boolean>(false);
     const [startingDate, setStartingDate] = useState<Date>(new Date());
+
+
+    const deleteButtonLongPressEvent = useLongPress(() => {
+
+        if (selectedTaskId) {
+            deleteRoutine(selectedTaskId);
+            handleCloseModal();
+        }
+
+    }, () => null, { delay: 2000 });
 
     useEffect(() => {
         if (selectedRoutine) {
@@ -66,11 +78,11 @@ export default function AddRoutineView(props: Props) {
         if (multiInputValue.length > 0) {
             newRoutine.defaultTimeOfDay = multiInputValue;
         }
+        if (startingDate) {
+            newRoutine.startingDate = startingDate;
+        }
         newRoutine.frequency = frequencyValue;
         newRoutine.stickyTask = isStickyTask;
-        newRoutine.startingDate = startingDate;
-        console.log("saving the date:");
-        console.log(startingDate);
 
 
 
@@ -80,6 +92,7 @@ export default function AddRoutineView(props: Props) {
         setSelectedTaskId(null);
         handleCloseModal();
     }
+
 
     function handleCloseModal() {
         setAddroutineModalOpen(false);
@@ -150,6 +163,7 @@ export default function AddRoutineView(props: Props) {
                 {// optional delete button
                     selectedRoutine &&
                     <Button
+                        {...deleteButtonLongPressEvent}
                         className='add-routine-delete-btn'
                         color="red">
                         Delete (long press)

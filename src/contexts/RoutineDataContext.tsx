@@ -8,7 +8,7 @@ export type RoutineContext = {
 
     addRoutine: (routine: Routine) => void,
     updateRoutine: (routine: Routine) => void,
-    deleteRoutine?: (id: string) => void,
+    deleteRoutine: (id: string) => void,
     getNewRoutine: () => Routine,
     getRoutine: (id: string) => Routine | null
 }
