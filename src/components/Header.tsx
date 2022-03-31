@@ -1,31 +1,41 @@
+import React, { useState } from 'react'
 
-import { stringify } from 'querystring';
-import React from 'react'
+import { DatePicker } from '@mantine/dates';
 
-const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const monthNames = ["January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-];
-type Props = {}
+type Props = {
+    pickedDate: Date,
+    setPickedDate: (date: Date) => void
+}
 
-export default function Header({ }: Props) {
+export default function Header(props: Props) {
 
-    const date = new Date();
+    const { pickedDate, setPickedDate } = props;
 
 
     return (
         <>
             <div className="time-and-date-container">
-                <div className="date-container">
-                    {weekday[date.getDay()]}, {monthNames[date.getMonth()]}
-                    {" " + date.getDate()}
-                </div>
+                <DatePicker
+                    placeholder="Pick date"
+                    firstDayOfWeek="sunday"
+                    dropdownType='modal'
+                    clearable={false}
 
-                <div className="time-container">
-                    {date.getHours()}:{date.getMinutes()}
-                </div>
+                    value={pickedDate}
+                    onChange={(newDate: Date) => setPickedDate(newDate)}
+                    inputFormat="dddd,  MMMM D  YYYY"
+                    styles={{
+                        input: {
+                            backgroundColor: "transparent",
+                            fontFamily: "Oswald",
+                            fontWeight: "Bold",
+                            textTransform: "uppercase",
+                        }
+                    }}
+                />
 
             </div>
+
             <div className="header-container">
                 Routine
             </div>

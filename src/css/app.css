@@ -29,8 +29,8 @@ html, body{
 }
 
 .time-and-date-container{
-  display: flex;
-  justify-content: space-between;
+  /* display: flex; */
+  /* justify-content: space-between; */
   font-weight: bold;
   text-transform: uppercase;
 }

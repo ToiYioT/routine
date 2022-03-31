@@ -123,12 +123,8 @@ export default function AddRoutineView(props: Props) {
 
                     defaultValue={startingDate}
                     value={startingDate}
-                    onChange={(e: Date) => {
-                        console.log("on change date:");
-                        console.log(e);
-
-                        setStartingDate(e)
-                    }}
+                    onChange={(e: Date) => setStartingDate(e)}
+                    clearable={false}
                     icon={<Calendar size={16} />}
                 />
 
@@ -136,6 +132,8 @@ export default function AddRoutineView(props: Props) {
                     label="Repeat task every x days"
                     value={frequencyValue}
                     onChange={(value: number) => setFrequencyValue(value)}
+                    min={1}
+                    max={500}
                 />
 
                 <MultiSelect
