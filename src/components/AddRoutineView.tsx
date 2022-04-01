@@ -34,7 +34,8 @@ export default function AddRoutineView(props: Props) {
 
     const { addRoutine, updateRoutine,
         getRoutine, getNewRoutine, deleteRoutine } = useRoutineData() as RoutineContext;
-    const { selectedTaskId, setSelectedTaskId } = useContext(AppContext) as AppContext;
+    const { selectedTaskId, setSelectedTaskId,
+        pickedDate } = useContext(AppContext) as AppContext;
     const selectedRoutine = selectedTaskId ? getRoutine(selectedTaskId) : null;
     const nameInputRef = useRef<HTMLInputElement>(null);
 
@@ -66,9 +67,9 @@ export default function AddRoutineView(props: Props) {
             setMultiInputValue(["morning"]);
             setFrequencyValue(7);
             setIsStickyTask(false);
-            setStartingDate(new Date());
+            setStartingDate(pickedDate);
         }
-    }, [selectedRoutine]);
+    }, [selectedRoutine, pickedDate]);
 
     function handleSubmit() {
 
