@@ -1,8 +1,8 @@
-
 import React, { useContext } from 'react'
 import { AppContext } from '../App'
 import useRoutineData, { Routine, RoutineContext } from '../contexts/RoutineDataContext'
 import TaskCard from './TaskCard'
+import { Temporal } from '@js-temporal/polyfill'
 
 type Props = {
     partOfDay: string
@@ -13,6 +13,8 @@ export default function PartOfDay({ partOfDay, endTime }: Props) {
 
     const { data } = useRoutineData() as RoutineContext;
     const { pickedDate } = useContext(AppContext) as AppContext;
+
+    const pickedDateTemporal = getTemporalFromDate(pickedDate);
 
     return (
         <div className="part-of-day-container">
@@ -29,7 +31,10 @@ export default function PartOfDay({ partOfDay, endTime }: Props) {
                 {
                     data.map(task => {
 
-                        return isTaskToday(task, pickedDate, partOfDay) &&
+                        return isTaskToday(
+                            task,
+                            pickedDateTemporal,
+                            partOfDay) &&
 
                             <TaskCard
                                 task={task}
@@ -43,11 +48,24 @@ export default function PartOfDay({ partOfDay, endTime }: Props) {
     )
 }
 
-function isTaskToday(task: Routine, pickedDate: Date, partOfDay: string) {
+function isTaskToday(task: Routine, pickedDate: Temporal.PlainDate, partOfDay: string) {
 
-    const taskDate: string = new Date(task.startingDate).toDateString();
-    const pickedDateString: string = pickedDate.toDateString();
+    const taskDate = getTemporalFromDate(new Date(task.startingDate));
+    const daysFromStart: number = pickedDate.since(taskDate).days;
 
-    return (taskDate === pickedDate.toDateString()
-        && task.defaultTimeOfDay.includes(partOfDay))
+    // console.log("picked date: " + pickedDate.toString());
+    // console.log("task date: " + taskDate.toString());
+    // console.log("days from start: " + daysFromStart);
+
+    return (
+        daysFromStart >= 0 &&
+        daysFromStart % task.frequency == 0 &&
+        task.defaultTimeOfDay.includes(partOfDay)
+    )
+}
+
+function getTemporalFromDate(date: Date) {
+    return new Temporal.PlainDate(
+        date.getFullYear(), date.getMonth() + 1, date.getDate()
+    )
 }
