@@ -39,6 +39,7 @@ export default function AddRoutineView(props: Props) {
     const selectedRoutine = selectedTaskId ? getRoutine(selectedTaskId) : null;
     const nameInputRef = useRef<HTMLInputElement>(null);
 
+    const [routineName, setRoutineName] = useState<string>("");
     const [multiInputValue, setMultiInputValue] = useState<string[]>(["morning"]);
     const [frequencyValue, setFrequencyValue] = useState<number>(7);
     const [isStickyTask, setIsStickyTask] = useState<boolean>(false);
@@ -57,6 +58,7 @@ export default function AddRoutineView(props: Props) {
     useEffect(() => {
         if (selectedRoutine) {
             // set the values from data
+            setRoutineName(selectedRoutine.name);
             setMultiInputValue(selectedRoutine.defaultTimeOfDay);
             setFrequencyValue(selectedRoutine.frequency);
             setIsStickyTask(selectedRoutine.stickyTask);
@@ -64,6 +66,7 @@ export default function AddRoutineView(props: Props) {
 
         } else {
             // defaults:
+            setRoutineName("");
             setMultiInputValue(["morning"]);
             setFrequencyValue(7);
             setIsStickyTask(false);
@@ -71,10 +74,11 @@ export default function AddRoutineView(props: Props) {
         }
     }, [selectedRoutine, pickedDate]);
 
+
     function handleSubmit() {
 
         const newRoutine = selectedRoutine ? selectedRoutine : getNewRoutine();
-        newRoutine.name = nameInputRef.current?.value || "no name";
+        newRoutine.name = routineName;
 
         if (multiInputValue.length > 0) {
             newRoutine.defaultTimeOfDay = multiInputValue;
@@ -84,8 +88,6 @@ export default function AddRoutineView(props: Props) {
         }
         newRoutine.frequency = frequencyValue;
         newRoutine.stickyTask = isStickyTask;
-
-
 
         selectedRoutine ? updateRoutine(newRoutine)
             : addRoutine(newRoutine);
@@ -113,8 +115,8 @@ export default function AddRoutineView(props: Props) {
                 <TextInput
                     placeholder="task"
                     label="Task Name"
-                    defaultValue={selectedRoutine ? selectedRoutine.name : ""}
-                    ref={nameInputRef}
+                    value={routineName}
+                    onChange={event => setRoutineName(event.currentTarget.value)}
                 />
 
                 <DatePicker

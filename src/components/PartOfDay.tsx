@@ -1,7 +1,7 @@
 
 import React, { useContext } from 'react'
 import { AppContext } from '../App'
-import useRoutineData, { RoutineContext } from '../contexts/RoutineDataContext'
+import useRoutineData, { Routine, RoutineContext } from '../contexts/RoutineDataContext'
 import TaskCard from './TaskCard'
 
 type Props = {
@@ -29,17 +29,25 @@ export default function PartOfDay({ partOfDay, endTime }: Props) {
                 {
                     data.map(task => {
 
-                        if (new Date(task.startingDate).toDateString() === pickedDate.toDateString()
-                            && task.defaultTimeOfDay.includes(partOfDay)) {
-                            return <TaskCard
+                        return isTaskToday(task, pickedDate, partOfDay) &&
+
+                            <TaskCard
                                 task={task}
                                 key={task.id}
                             />
-                        }
                     })
                 }
             </div>
 
         </div>
     )
+}
+
+function isTaskToday(task: Routine, pickedDate: Date, partOfDay: string) {
+
+    const taskDate: string = new Date(task.startingDate).toDateString();
+    const pickedDateString: string = pickedDate.toDateString();
+
+    return (taskDate === pickedDate.toDateString()
+        && task.defaultTimeOfDay.includes(partOfDay))
 }
