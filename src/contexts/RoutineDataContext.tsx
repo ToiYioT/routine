@@ -35,6 +35,7 @@ export function RoutineProvider({ children }: Props) {
     }
 
     function updateRoutine(routineToUpdate: Routine) {
+
         setData((prevData: Routine[]) => {
             return prevData.map(routine => {
                 if (routine.id === routineToUpdate.id) return routineToUpdate;
@@ -79,17 +80,19 @@ export function RoutineProvider({ children }: Props) {
 //////////////////
 
 function getNewRoutine() {
+    const dateNow = new Date();
+
     const newRoutine: Routine = {
         id: uuidv4(),
         name: "",
         icon: 0,
 
-        startingDate: new Date(),
+        startingDate: dateNow,
         frequency: 7,
         defaultTimeOfDay: ["morning"],
-        nextTime: "",
+        nextTime: dateNow,
         stickyTask: false,
-        dismissed: false,
+        dismissed: false
     };
 
     return newRoutine;
@@ -104,13 +107,14 @@ export type Routine = {
     startingDate: Date
     frequency: number
     defaultTimeOfDay: string[]
-    nextTime?: string
+    nextTime: Date
     stickyTask: boolean
-    dismissed?: boolean
-
+    dismissed: boolean
     taksInstances?: TaksInstance[]
 }
 
 type TaksInstance = {
-
+    id: string,
+    date: Date,
+    timeOfDay: string
 }

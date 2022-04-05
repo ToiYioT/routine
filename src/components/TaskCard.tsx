@@ -7,6 +7,7 @@ import { Routine } from '../contexts/RoutineDataContext';
 
 type Props = {
     task: Routine
+    updateRoutine: (routine: Routine) => void
 }
 
 const colors = [
@@ -18,9 +19,8 @@ const colors = [
     "rgb(194, 219, 164)",
 ]
 
-export default function TaskCard({ task }: Props) {
+export default function TaskCard({ task, updateRoutine }: Props) {
 
-    const [cardOn, setCardOn] = useState(Math.random() > .5);
     const bgColorRef = useRef(colors[Math.floor(Math.random() * colors.length)]);
 
     const {
@@ -28,18 +28,20 @@ export default function TaskCard({ task }: Props) {
         setSelectedTaskId } = useContext(AppContext) as AppContext;
 
     const onLongPress = () => {
+
         setSelectedTaskId(task.id);
         setAddroutineModalOpen(true);
     };
 
     const onClick = () => {
-        setCardOn(prevState => !prevState)
+        const updatedRoutine = { ...task, ...{ dismissed: !task.dismissed } };
+        updateRoutine(updatedRoutine);
     }
 
     const longPressEvent = useLongPress(onLongPress, onClick);
 
     const cardClasses = "task-card-container" + (
-        cardOn ? "" : " faded-card"
+        !task.dismissed ? "" : " faded-card"
     );
 
     return (

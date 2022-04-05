@@ -11,7 +11,7 @@ type Props = {
 
 export default function PartOfDay({ partOfDay, endTime }: Props) {
 
-    const { data } = useRoutineData() as RoutineContext;
+    const { data, updateRoutine } = useRoutineData() as RoutineContext;
     const { pickedDate } = useContext(AppContext) as AppContext;
 
     const pickedDateTemporal = getTemporalFromDate(pickedDate);
@@ -38,6 +38,7 @@ export default function PartOfDay({ partOfDay, endTime }: Props) {
 
                             <TaskCard
                                 task={task}
+                                updateRoutine={updateRoutine}
                                 key={task.id}
                             />
                     })
@@ -48,7 +49,11 @@ export default function PartOfDay({ partOfDay, endTime }: Props) {
     )
 }
 
-function isTaskToday(task: Routine, pickedDate: Temporal.PlainDate, partOfDay: string) {
+function isTaskToday(
+    task: Routine,
+    pickedDate: Temporal.PlainDate,
+    partOfDay: string
+): boolean {
 
     const taskDate = getTemporalFromDate(new Date(task.startingDate));
     const daysFromStart: number = pickedDate.since(taskDate).days;
@@ -64,7 +69,7 @@ function isTaskToday(task: Routine, pickedDate: Temporal.PlainDate, partOfDay: s
     )
 }
 
-function getTemporalFromDate(date: Date) {
+function getTemporalFromDate(date: Date): Temporal.PlainDate {
     return new Temporal.PlainDate(
         date.getFullYear(), date.getMonth() + 1, date.getDate()
     )

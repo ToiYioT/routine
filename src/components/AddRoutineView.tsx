@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Modal } from '@mantine/core';
 
 import {
@@ -37,7 +37,6 @@ export default function AddRoutineView(props: Props) {
     const { selectedTaskId, setSelectedTaskId,
         pickedDate } = useContext(AppContext) as AppContext;
     const selectedRoutine = selectedTaskId ? getRoutine(selectedTaskId) : null;
-    const nameInputRef = useRef<HTMLInputElement>(null);
 
     const [routineName, setRoutineName] = useState<string>("");
     const [multiInputValue, setMultiInputValue] = useState<string[]>(["morning"]);
@@ -85,6 +84,7 @@ export default function AddRoutineView(props: Props) {
         }
         if (startingDate) {
             newRoutine.startingDate = startingDate;
+            newRoutine.nextTime = startingDate;
         }
         newRoutine.frequency = frequencyValue;
         newRoutine.stickyTask = isStickyTask;
