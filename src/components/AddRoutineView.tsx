@@ -42,7 +42,7 @@ export default function AddRoutineView(props: Props) {
     const [multiInputValue, setMultiInputValue] = useState<string[]>(["morning"]);
     const [frequencyValue, setFrequencyValue] = useState<number>(7);
     const [isStickyTask, setIsStickyTask] = useState<boolean>(false);
-    const [startingDate, setStartingDate] = useState<Date>(new Date());
+    const [startingDate, setStartingDate] = useState<Date>(pickedDate);
 
 
     const deleteButtonLongPressEvent = useLongPress(() => {
@@ -124,6 +124,7 @@ export default function AddRoutineView(props: Props) {
                     placeholder="Pick date"
                     firstDayOfWeek="sunday"
 
+                    inputFormat="dddd,  MMMM D  YYYY"
                     defaultValue={startingDate}
                     value={startingDate}
                     onChange={(e: Date) => setStartingDate(e)}

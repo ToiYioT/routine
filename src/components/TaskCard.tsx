@@ -1,13 +1,14 @@
 
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useRef } from 'react'
 import LaundryIcon from '@mui/icons-material/LocalLaundryService';
 import useLongPress from '../hooks/useLongPress';
 import { AppContext } from '../App';
 import { Routine } from '../contexts/RoutineDataContext';
 
 type Props = {
-    task: Routine
-    updateRoutine: (routine: Routine) => void
+    routine: Routine
+    dismissed: boolean
+    toggleDoneTask: () => void
 }
 
 const colors = [
@@ -19,7 +20,7 @@ const colors = [
     "rgb(194, 219, 164)",
 ]
 
-export default function TaskCard({ task, updateRoutine }: Props) {
+export default function TaskCard({ routine, dismissed, toggleDoneTask }: Props) {
 
     const bgColorRef = useRef(colors[Math.floor(Math.random() * colors.length)]);
 
@@ -27,21 +28,21 @@ export default function TaskCard({ task, updateRoutine }: Props) {
         setAddroutineModalOpen,
         setSelectedTaskId } = useContext(AppContext) as AppContext;
 
+
     const onLongPress = () => {
 
-        setSelectedTaskId(task.id);
+        setSelectedTaskId(routine.id);
         setAddroutineModalOpen(true);
     };
 
     const onClick = () => {
-        const updatedRoutine = { ...task, ...{ dismissed: !task.dismissed } };
-        updateRoutine(updatedRoutine);
+        toggleDoneTask();
     }
 
     const longPressEvent = useLongPress(onLongPress, onClick);
 
     const cardClasses = "task-card-container" + (
-        !task.dismissed ? "" : " faded-card"
+        dismissed === false ? "" : " faded-card"
     );
 
     return (
@@ -58,7 +59,7 @@ export default function TaskCard({ task, updateRoutine }: Props) {
                 />
             </div>
             <div className="task-card-description">
-                {task.name}
+                {routine.name}
             </div>
         </div>
     )

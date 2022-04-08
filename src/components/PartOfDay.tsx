@@ -11,7 +11,7 @@ type Props = {
 
 export default function PartOfDay({ partOfDay, endTime }: Props) {
 
-    const { data, updateRoutine } = useRoutineData() as RoutineContext;
+    const { routineData, toggleDoneTask, findTask } = useRoutineData() as RoutineContext;
     const { pickedDate } = useContext(AppContext) as AppContext;
 
     const pickedDateTemporal = getTemporalFromDate(pickedDate);
@@ -29,18 +29,24 @@ export default function PartOfDay({ partOfDay, endTime }: Props) {
 
             <div className="task-cards-container">
                 {
-                    data.map(task => {
+                    routineData.map(task => {
 
-                        return isTaskToday(
-                            task,
-                            pickedDateTemporal,
-                            partOfDay) &&
+                        const doneTaskObject = {
+                            routineId: task.id,
+                            date: pickedDate,
+                            timeOfDay: partOfDay
+                        }
 
-                            <TaskCard
-                                task={task}
-                                updateRoutine={updateRoutine}
+                        if (isTaskToday(task, pickedDateTemporal, partOfDay)) {
+
+                            return <TaskCard
+                                routine={task}
+                                dismissed={findTask(doneTaskObject) != null}
+                                toggleDoneTask={() => toggleDoneTask(doneTaskObject)}
                                 key={task.id}
                             />
+
+                        }
                     })
                 }
             </div>

@@ -3,14 +3,17 @@ import useLocalStorage from "../hooks/useLocalStorage";
 import { v4 as uuidv4 } from "uuid"
 
 export type RoutineContext = {
-    data: Routine[],
-    setData?: (data: Routine[]) => void,
+    routineData: Routine[]
+    setRoutineData?: (data: Routine[]) => void
 
-    addRoutine: (routine: Routine) => void,
-    updateRoutine: (routine: Routine) => void,
-    deleteRoutine: (id: string) => void,
-    getNewRoutine: () => Routine,
+    addRoutine: (routine: Routine) => void
+    updateRoutine: (routine: Routine) => void
+    deleteRoutine: (id: string) => void
+    getNewRoutine: () => Routine
     getRoutine: (id: string) => Routine | null
+
+    findTask: (task: DoneTask) => DoneTask | null
+    toggleDoneTask: (task: DoneTask) => void
 }
 
 const RoutineContext = createContext<RoutineContext | null>(null);
@@ -25,18 +28,59 @@ export default function useRoutineData() {
 
 export function RoutineProvider({ children }: Props) {
 
-    const [data, setData] = useLocalStorage("routine-data", []);
+    const [routineData, setRoutineData] = useLocalStorage("routine-data", []);
+    const [doneTasksData, setDoneTasksData] = useLocalStorage("done-tasks-data", []);
+
+    function addDoneTask(doneTask: DoneTask) {
+        const newDoneTasksData = [...doneTasksData, doneTask];
+        setDoneTasksData(newDoneTasksData);
+    }
+
+    function removeDoneTask(taskToRemove: DoneTask) {
+        setDoneTasksData((prevData: DoneTask[]) => {
+
+            return prevData.filter(doneTask => {
+                return doneTask.routineId !== taskToRemove.routineId ||
+                    doneTask.date !== taskToRemove.date ||
+                    doneTask.timeOfDay !== taskToRemove.timeOfDay
+
+            });
+        })
+    }
+
+    function findTask(doneTask: DoneTask) {
+
+        return doneTasksData.find((task: DoneTask) => {
+
+            return new Date(task.date).toDateString() == doneTask.date.toDateString() &&
+                task.routineId == doneTask.routineId &&
+                task.timeOfDay == doneTask.timeOfDay
+        });
+    }
+
+    function toggleDoneTask(toggleTask: DoneTask) {
+
+        const foundTask = findTask(toggleTask);
+        if (foundTask) {
+            console.log("going to remove");
+
+            removeDoneTask(foundTask);
+        } else {
+            console.log("going to add");
+            addDoneTask(toggleTask);
+        }
+    }
 
     function addRoutine(routine: Routine) {
         const newRoutine = routine;
-        setData((prevData: Routine[]) => {
+        setRoutineData((prevData: Routine[]) => {
             return [...prevData, newRoutine];
         });
     }
 
     function updateRoutine(routineToUpdate: Routine) {
 
-        setData((prevData: Routine[]) => {
+        setRoutineData((prevData: Routine[]) => {
             return prevData.map(routine => {
                 if (routine.id === routineToUpdate.id) return routineToUpdate;
                 return routine
@@ -45,27 +89,33 @@ export function RoutineProvider({ children }: Props) {
     }
 
     function deleteRoutine(id: string) {
-        setData((prevData: Routine[]) => {
-            return prevData.filter(inquiry => inquiry.id !== id);
+        setRoutineData((prevData: Routine[]) => {
+            return prevData.filter(routine => routine.id !== id);
+        });
+        setDoneTasksData((prevData: DoneTask[]) => {
+            return prevData.filter(doneTask => doneTask.routineId != id);
         });
     }
 
     function getRoutine(id: string) {
-        return data.find((task: Routine) => task.id == id);
+        return routineData.find((task: Routine) => task.id == id);
     }
 
 
     return (
         <RoutineContext.Provider
             value={{
-                data,
-                setData,
+                routineData,
+                setRoutineData,
 
                 addRoutine,
                 updateRoutine,
                 deleteRoutine,
                 getNewRoutine,
                 getRoutine,
+
+                findTask,
+                toggleDoneTask
             }}
         >
             {children}
@@ -92,7 +142,6 @@ function getNewRoutine() {
         defaultTimeOfDay: ["morning"],
         nextTime: dateNow,
         stickyTask: false,
-        dismissed: false
     };
 
     return newRoutine;
@@ -109,12 +158,10 @@ export type Routine = {
     defaultTimeOfDay: string[]
     nextTime: Date
     stickyTask: boolean
-    dismissed: boolean
-    taksInstances?: TaksInstance[]
 }
 
-type TaksInstance = {
-    id: string,
+export type DoneTask = {
+    routineId: string,
     date: Date,
     timeOfDay: string
 }
