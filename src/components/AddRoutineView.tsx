@@ -41,7 +41,7 @@ export default function AddRoutineView(props: Props) {
     const [routineName, setRoutineName] = useState<string>("");
     const [multiInputValue, setMultiInputValue] = useState<string[]>(["morning"]);
     const [frequencyValue, setFrequencyValue] = useState<number>(7);
-    const [isStickyTask, setIsStickyTask] = useState<boolean>(false);
+    const [isPostponable, setIsPostponable] = useState<boolean>(false);
     const [startingDate, setStartingDate] = useState<Date>(pickedDate);
 
 
@@ -60,7 +60,7 @@ export default function AddRoutineView(props: Props) {
             setRoutineName(selectedRoutine.name);
             setMultiInputValue(selectedRoutine.defaultTimeOfDay);
             setFrequencyValue(selectedRoutine.frequency);
-            setIsStickyTask(selectedRoutine.stickyTask);
+            setIsPostponable(selectedRoutine.postponable);
             setStartingDate(new Date(selectedRoutine.startingDate));
 
         } else {
@@ -68,7 +68,7 @@ export default function AddRoutineView(props: Props) {
             setRoutineName("");
             setMultiInputValue(["morning"]);
             setFrequencyValue(7);
-            setIsStickyTask(false);
+            setIsPostponable(false);
             setStartingDate(pickedDate);
         }
     }, [selectedRoutine, pickedDate]);
@@ -87,7 +87,7 @@ export default function AddRoutineView(props: Props) {
             newRoutine.nextTime = startingDate;
         }
         newRoutine.frequency = frequencyValue;
-        newRoutine.stickyTask = isStickyTask;
+        newRoutine.postponable = isPostponable;
 
         selectedRoutine ? updateRoutine(newRoutine)
             : addRoutine(newRoutine);
@@ -150,8 +150,8 @@ export default function AddRoutineView(props: Props) {
                 <Checkbox
                     label="Should carry over when ignored"
                     color="lime"
-                    checked={isStickyTask}
-                    onChange={(event) => setIsStickyTask(event.currentTarget.checked)}
+                    checked={isPostponable}
+                    onChange={(event) => setIsPostponable(event.currentTarget.checked)}
                 />
 
 

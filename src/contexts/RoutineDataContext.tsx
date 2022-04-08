@@ -141,7 +141,7 @@ function getNewRoutine() {
         frequency: 7,
         defaultTimeOfDay: ["morning"],
         nextTime: dateNow,
-        stickyTask: false,
+        postponable: true,
     };
 
     return newRoutine;
@@ -157,7 +157,7 @@ export type Routine = {
     frequency: number
     defaultTimeOfDay: string[]
     nextTime: Date
-    stickyTask: boolean
+    postponable: boolean
 }
 
 export type DoneTask = {
