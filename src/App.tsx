@@ -6,6 +6,11 @@ import Footer from './components/Footer';
 import { RoutineProvider } from './contexts/RoutineDataContext';
 
 import AddRoutineView from './components/AddRoutineView';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
 
 export interface AppContext {
   selectedTaskId: string | null
@@ -32,20 +37,31 @@ function App() {
         }
       }>
       <RoutineProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={
+              <> <div className="app-container">
+                <Header
+                  pickedDate={pickedDate}
+                  setPickedDate={setPickedDate}
+                ></Header>
+                <RoutineDay></RoutineDay>
+              </div>
+                <Footer></Footer>
+              </>} />
 
-        <div className="app-container">
-          <Header
-            pickedDate={pickedDate}
-            setPickedDate={setPickedDate}
-          ></Header>
-          <RoutineDay></RoutineDay>
-        </div>
-        <Footer></Footer>
 
-        <AddRoutineView
-          addroutineModalOpen={addroutineModalOpen}
-          setAddroutineModalOpen={setAddroutineModalOpen}
-        />
+            <Route path="add-routine" element={
+              <AddRoutineView
+                addroutineModalOpen={addroutineModalOpen}
+                setAddroutineModalOpen={setAddroutineModalOpen}
+              />
+            } />
+
+          </Routes>
+        </BrowserRouter>
+
+
 
       </RoutineProvider>
     </AppContext.Provider>

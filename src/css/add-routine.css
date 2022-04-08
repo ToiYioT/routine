@@ -1,10 +1,13 @@
+.add-routine-view-container {
+    padding: 1rem;
+}
 
-.routine-view-items{
+.routine-view-items {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.add-routine-submit-btn{
+.add-routine-submit-btn {
     margin-top: 2rem;
 }

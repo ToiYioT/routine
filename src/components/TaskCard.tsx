@@ -4,6 +4,7 @@ import LaundryIcon from '@mui/icons-material/LocalLaundryService';
 import useLongPress from '../hooks/useLongPress';
 import { AppContext } from '../App';
 import { Routine } from '../contexts/RoutineDataContext';
+import { useNavigate } from "react-router-dom";
 
 type Props = {
     routine: Routine
@@ -22,6 +23,7 @@ const colors = [
 
 export default function TaskCard({ routine, dismissed, toggleDoneTask }: Props) {
 
+    const navigate = useNavigate();
     const bgColorRef = useRef(colors[Math.floor(Math.random() * colors.length)]);
 
     const {
@@ -33,6 +35,7 @@ export default function TaskCard({ routine, dismissed, toggleDoneTask }: Props) 
 
         setSelectedTaskId(routine.id);
         setAddroutineModalOpen(true);
+        navigate("/add-routine");
     };
 
     const onClick = () => {

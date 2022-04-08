@@ -6,6 +6,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircleOutline';
 import GridViewIcon from '@mui/icons-material/GridView';
 import SettingsIcon from '@mui/icons-material/Settings';
 
+import { Link } from "react-router-dom";
 
 type Props = {}
 
@@ -16,11 +17,13 @@ export default function Footer() {
     return (
         <>
             <div className="footer-container">
-                <ActionIcon
-                    onClick={() => setAddroutineModalOpen(true)}
-                >
-                    <AddCircleIcon />
-                </ActionIcon>
+                <Link to="/add-routine">
+                    <ActionIcon
+                        onClick={() => setAddroutineModalOpen(true)}
+                    >
+                        <AddCircleIcon />
+                    </ActionIcon>
+                </Link>
 
                 <ActionIcon
                 >

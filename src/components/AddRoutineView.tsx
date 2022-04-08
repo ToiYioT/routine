@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Modal } from '@mantine/core';
+import { Link, useNavigate } from "react-router-dom";
 
 import {
     TextInput, MultiSelect,
@@ -44,6 +44,7 @@ export default function AddRoutineView(props: Props) {
     const [isPostponable, setIsPostponable] = useState<boolean>(false);
     const [startingDate, setStartingDate] = useState<Date>(pickedDate);
 
+    const navigate = useNavigate();
 
     const deleteButtonLongPressEvent = useLongPress(() => {
 
@@ -51,6 +52,8 @@ export default function AddRoutineView(props: Props) {
             deleteRoutine(selectedTaskId);
             handleCloseModal();
         }
+        // navigate('/sample', { replace: true }), [navigate]);
+        navigate("/");
 
     }, () => null, { delay: 2000 });
 
@@ -103,13 +106,13 @@ export default function AddRoutineView(props: Props) {
     }
 
     return (
-        <Modal
-            opened={addroutineModalOpen}
-            onClose={handleCloseModal}
-            title={selectedRoutine ? "Update " + selectedRoutine.name
-                : "Add new routine"}
-        >
-
+        // <Modal
+        //     opened={addroutineModalOpen}
+        //     onClose={handleCloseModal}
+        //     title={selectedRoutine ? "Update " + selectedRoutine.name
+        //         : "Add new routine"}
+        // >
+        <div className="add-routine-view-container">
             <div className="routine-view-items">
 
                 <TextInput
@@ -155,12 +158,15 @@ export default function AddRoutineView(props: Props) {
                 />
 
 
-                <Button
-                    className='add-routine-submit-btn'
-                    onClick={handleSubmit}
-                    color="lime">
-                    {selectedRoutine ? "Update" : "Submit"}
-                </Button>
+
+                <Link to="/">
+                    <Button
+                        className='add-routine-submit-btn'
+                        onClick={handleSubmit}
+                        color="lime">
+                        {selectedRoutine ? "Update" : "Submit"}
+                    </Button>
+                </Link>
 
                 {// optional delete button
                     selectedRoutine &&
@@ -169,10 +175,15 @@ export default function AddRoutineView(props: Props) {
                         className='add-routine-delete-btn'
                         color="red">
                         Delete (long press)
-                    </Button>}
+                    </Button>
+                }
             </div>
 
-        </Modal>
+
+        </div>
+
+
+        // </Modal>
 
     )
 }
